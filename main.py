@@ -1,105 +1,20 @@
-from textblob import TextBlob
-from deep_translator import GoogleTranslator
-
-
-def translate(text):
-    translated = GoogleTranslator(source='auto', target='en').translate(text)
-    return translated
-
-
-class Analysis:
-    def __init__(self, txt):
-        self.text = txt
-        self.translated = translate(txt)
-
-        self.sentences = None
-        self.words = None
-        self.syllables = None
-        self.asl = None
-        self.asw = None
-        self.index = None
-        self.textTone = None
-        self.objectivity = None
-        self.result = None
-
-    def sentencesHandler(self):
-        self.sentences = None
-
-    def wordsHandler(self):
-        self.words = None
-
-    def syllablesHandler(self):
-        self.syllables = None
-
-    def aslHandler(self):
-        # Average sentence length
-
-        self.asl = None
-
-    def aswHandler(self):
-        # Average number of syllables per word
-
-        self.asw = None
-
-    def indexHandler(self):
-        self.index = None
-
-    def textToneHandler(self):
-        self.textTone = None
-
-    def objectivityHandler(self):
-        self.objectivity = None
-
-    def resultHandler(self):
-        index = self.index
-
-        if index is None:
-            value = 'Error! The index was not calculated.'
-
-        elif index > 80:
-            value = 'The text reads easily. (For younger students)'
-
-        elif 80 >= index > 50:
-            value = 'Plain text. (For school children)'
-
-        elif 50 >= index > 25:
-            value = 'The text is a little hard to read. (For students)'
-
-        elif 25 > index:
-            value = 'The text is hard to read. (For university graduates)'
-
-        else:
-            value = 'Error! Incorrect value.'
-
-        self.result = value
-
-    def mainHandler(self):
-        self.sentencesHandler()
-        self.wordsHandler()
-        self.syllablesHandler()
-        self.aslHandler()
-        self.aswHandler()
-        self.indexHandler()
-        self.textToneHandler()
-        self.objectivityHandler()
-        self.resultHandler()
+from text_analyser import Analysis
 
 
 def main():
     text = input('Type in your text: ')
 
-    anls_text = Analysis(text)
-    anls_text.mainHandler()
+    anls_text = Analysis()
 
-    print(f'Number of sentences: {anls_text.sentences}')
-    print(f'Number of words: {anls_text.words}')
-    print(f'Number of syllables: {anls_text.syllables}')
-    print(f'Average sentence length: {anls_text.asl}')
-    print(f'Average number of syllables per word: {anls_text.asw}')
-    print(f'The Flesch Reading Ease Index: {anls_text.index}')
-    print(f'Text tone: {anls_text.index}')
-    print(f'Objectivity: {anls_text.objectivity}')
-    print(f'Result: {anls_text.result}')
+    print(f'Number of sentences: {anls_text.getSentences}')
+    print(f'Number of words: {anls_text.getWords}')
+    print(f'Number of syllables: {anls_text.getSyllables}')
+    print(f'Average sentence length: {anls_text.getAsl}')
+    print(f'Average number of syllables per word: {anls_text.getAsw}')
+    print(f'The Flesch Reading Ease Index: {anls_text.getIndex}')
+    print(f'Text tone: {anls_text.getTextTone()}')
+    print(f'Objectivity: {anls_text.getObjectivity}')
+    print(f'Result: {anls_text.getResult}')
 
 
 if __name__ == '__main__':
@@ -117,8 +32,7 @@ def translate(text):
     return translated
 
 text = input("Input your text: ")
-vowels_rus = ['а','е','ё','и','о','у','ы','э','ю','я']
-vowels_eng = ['a','e','i','o','u','y']
+
 rus_count=0
 rus = False
 eng_count=0
@@ -142,8 +56,7 @@ for s1 in text:
     if s1.lower() in vowels_rus:
         rus_count+=1
         rus = True
-for s2 in text:
-    if s2 .lower() in vowels_eng:
+    elif s1.lower() in vowels_eng:
         eng_count+=1
         eng = True
 if rus:
