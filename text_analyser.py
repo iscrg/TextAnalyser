@@ -1,3 +1,6 @@
+import string
+
+
 class Analysis:
     def __init__(self):
         self.__text = None
@@ -16,17 +19,26 @@ class Analysis:
     def __sentencesHandler(self):
         self.__sentences = None
 
-    def __wordsHandler(self):
+    def __wordsSentencesHandler(self):
+        marks = ['.', '?', '!']
+
         wordsCounter = 0
         sentencesCounter = 0
 
-        for i in range(len(self.__text)):
-            if self.__text[i] == ' ' and self.__text[i + 1] != ' ':
+        for i in range(len(self.__text) - 1):
+            if (self.__text[i] in string.whitespace and
+                    self.__text[i + 1] not in string.whitespace):
                 wordsCounter += 1
-            elif self.__text[i] == '.' and self.__text[i + 1] != '.':
+
+            elif self.__text[i] in marks and self.__text[i + 1] not in marks:
                 sentencesCounter += 1
+
             else:
                 pass
+
+        if sentencesCounter == 0:
+            sentencesCounter = 1
+        wordsCounter += 1
 
         self.__words = wordsCounter
         self.__sentences = sentencesCounter
@@ -95,7 +107,7 @@ class Analysis:
         self.__text = txt
 
         self.__sentencesHandler()
-        self.__wordsHandler()
+        self.__wordsSentencesHandler()
         self.__syllablesHandler()
         self.__aslHandler()
         self.__aswHandler()

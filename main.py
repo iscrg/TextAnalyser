@@ -5,16 +5,17 @@ def main():
     text = input('Type in your text: ')
 
     anls_text = Analysis()
+    anls_text.setText(text)
 
-    print(f'Number of sentences: {anls_text.getSentences}')
-    print(f'Number of words: {anls_text.getWords}')
-    print(f'Number of syllables: {anls_text.getSyllables}')
-    print(f'Average sentence length: {anls_text.getAsl}')
-    print(f'Average number of syllables per word: {anls_text.getAsw}')
-    print(f'The Flesch Reading Ease Index: {anls_text.getIndex}')
+    print(f'Number of sentences: {anls_text.getSentences()}')
+    print(f'Number of words: {anls_text.getWords()}')
+    print(f'Number of syllables: {anls_text.getSyllables()}')
+    print(f'Average sentence length: {anls_text.getAsl()}')
+    print(f'Average number of syllables per word: {anls_text.getAsw()}')
+    print(f'The Flesch Reading Ease Index: {anls_text.getIndex()}')
     print(f'Text tone: {anls_text.getTextTone()}')
-    print(f'Objectivity: {anls_text.getObjectivity}')
-    print(f'Result: {anls_text.getResult}')
+    print(f'Objectivity: {anls_text.getObjectivity()}')
+    print(f'Result: {anls_text.getResult()}')
 
 
 if __name__ == '__main__':
