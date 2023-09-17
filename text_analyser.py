@@ -1,10 +1,12 @@
 import string
 from textblob import TextBlob
+from deep_translator import GoogleTranslator
 
 
 class Analysis:
     def __init__(self):
         self.__text = None
+        self.__text_translated = None
 
         self.__language = None
         self.__sentences = None
@@ -17,66 +19,72 @@ class Analysis:
         self.__objectivity = None
         self.__result = None
 
-    def __sentencesHandler(self):
+    def __translate(self):
+        self.__text_translated = GoogleTranslator(source='auto', target='en').translate(self.__text)
+
+    def __sentences_handler(self):
         self.__sentences = None
 
-    def __wordsSentencesHandler(self):
+    def __words_sentences_handler(self):
         marks = ['.', '?', '!']
 
-        wordsCounter = 0
-        sentencesCounter = 0
+        words_counter = 0
+        sentences_counter = 0
 
         for i in range(len(self.__text) - 1):
             if (self.__text[i] in string.whitespace and
                     self.__text[i + 1] not in string.whitespace):
-                wordsCounter += 1
+                words_counter += 1
 
             elif self.__text[i] in marks and self.__text[i + 1] not in marks:
-                sentencesCounter += 1
+                sentences_counter += 1
 
             else:
                 pass
 
-        if sentencesCounter == 0:
-            sentencesCounter = 1
-        wordsCounter += 1
+        if sentences_counter == 0:
+            sentences_counter = 1
+        words_counter += 1
 
-        self.__words = wordsCounter
-        self.__sentences = sentencesCounter
+        if self.__text[-1] in marks:
+            sentences_counter += 1
 
-    def __syllablesHandler(self):
-        rusVowels = ['а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я']
-        engVowels = ['a', 'e', 'i', 'o', 'u', 'y']
-        rusCounter = 0
-        engCounter = 0
+        self.__words = words_counter
+        self.__sentences = sentences_counter
+
+    def __syllables_handler(self):
+        rus_vowels = ['а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я']
+        eng_vowels = ['a', 'e', 'i', 'o', 'u', 'y']
+        rus_counter = 0
+        eng_counter = 0
 
         for letter in self.__text:
-            if letter.lower() in rusVowels:
-                rusCounter += 1
-            elif letter.lower() in engVowels:
-                engCounter += 1
+            if letter.lower() in rus_vowels:
+                rus_counter += 1
+            elif letter.lower() in eng_vowels:
+                eng_counter += 1
 
-        if rusCounter > engCounter:
+        if rus_counter > eng_counter:
             self.__language = 'rus'
-            self.__syllables = rusCounter
+            self.__syllables = rus_counter
         else:
             self.__language = 'eng'
-            self.__syllables = engCounter
+            self.__syllables = eng_counter
 
-    def __aslHandler(self):
+    def __asl_handler(self):
         self.__asl = self.__words / self.__sentences
 
-    def __aswHandler(self):
+    def __asw_handler(self):
         self.__asw = self.__syllables / self.__words
 
-    def __indexHandler(self):
+    def __index_handler(self):
         if self.__language == 'rus':
             self.__index = 206.835 - (1.3 * self.__asl) - (60.1 * self.__asw)
-        if self.__language:
+        elif self.__language == 'eng':
             self.__index = 206.835 - (1.015 * self.__asl) - (84.6 * self.__asw)
 
-    def __textToneHandler(self):
-        emotion = TextBlob(self.__text)
+    def __text_tone_handler(self):
+        emotion = TextBlob(self.__text_translated)
         emotion_index = emotion.sentiment.polarity
         if emotion_index > (1 / 3):
             self.__textTone = 'positive'
@@ -85,11 +93,11 @@ class Analysis:
         else:
             self.__textTone = 'negative'
 
-    def __objectivityHandler(self):
-        emotion = TextBlob(self.__text)
+    def __objectivity_handler(self):
+        emotion = TextBlob(self.__text_translated)
         self.__objectivity = f'{round((1 - emotion.sentiment.subjectivity)*100, 1)}%'
 
-    def __resultHandler(self):
+    def __result_handler(self):
         index = self.__index
 
         if index is None:
@@ -112,42 +120,43 @@ class Analysis:
 
         self.__result = value
 
-    def setText(self, txt):
+    def set_text(self, txt):
         self.__text = txt
 
-        self.__sentencesHandler()
-        self.__wordsSentencesHandler()
-        self.__syllablesHandler()
-        self.__aslHandler()
-        self.__aswHandler()
-        self.__indexHandler()
-        self.__textToneHandler()
-        self.__objectivityHandler()
-        self.__resultHandler()
+        self.__translate()
+        self.__sentences_handler()
+        self.__words_sentences_handler()
+        self.__syllables_handler()
+        self.__asl_handler()
+        self.__asw_handler()
+        self.__index_handler()
+        self.__text_tone_handler()
+        self.__objectivity_handler()
+        self.__result_handler()
 
-    def getSentences(self):
+    def get_sentences(self):
         return self.__sentences
 
-    def getWords(self):
+    def get_words(self):
         return self.__words
 
-    def getSyllables(self):
+    def get_syllables(self):
         return self.__syllables
 
-    def getAsl(self):
+    def get_asl(self):
         return self.__asl
 
-    def getAsw(self):
+    def get_asw(self):
+        return self.__asw
+
+    def get_index(self):
         return self.__index
 
-    def getIndex(self):
-        return self.__index
-
-    def getObjectivity(self):
+    def get_objectivity(self):
         return self.__objectivity
 
-    def getTextTone(self):
+    def get_text_tone(self):
         return self.__textTone
 
-    def getResult(self):
+    def get_result(self):
         return self.__result
