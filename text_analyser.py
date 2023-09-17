@@ -76,7 +76,14 @@ class Analysis:
             self.__index = 206.835 - (1.015 * self.__asl) - (84.6 * self.__asw)
 
     def __textToneHandler(self):
-        self.__textTone = None
+        emotion = TextBlob(self.__text)
+        emotion_index = emotion.sentiment.polarity
+        if emotion_index > (1 / 3):
+            self.__textTone = 'positive'
+        elif -(1 / 3) <= emotion_index <= (1 / 3):
+            self.__textTone = 'neutral'
+        else:
+            self.__textTone = 'negative'
 
     def __objectivityHandler(self):
         emotion = TextBlob(self.__text)
