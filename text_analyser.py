@@ -1,4 +1,5 @@
 import string
+from textblob import TextBlob
 
 
 class Analysis:
@@ -78,7 +79,8 @@ class Analysis:
         self.__textTone = None
 
     def __objectivityHandler(self):
-        self.__objectivity = None
+        emotion = TextBlob(self.__text)
+        self.__objectivity = emotion.sentiment
 
     def __resultHandler(self):
         index = self.__index
