@@ -80,7 +80,7 @@ class Analysis:
 
     def __objectivityHandler(self):
         emotion = TextBlob(self.__text)
-        self.__objectivity = emotion.sentiment
+        self.__objectivity = f'{round((1 - emotion.sentiment.subjectivity)*100, 1)}%'
 
     def __resultHandler(self):
         index = self.__index
