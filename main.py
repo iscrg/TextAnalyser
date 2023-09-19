@@ -1,3 +1,9 @@
+'''
+Popov Ivan 80%
+Fisher Daniil 65%
+Fedyakin Dmitry 70%
+'''
+
 from text_analyser import Analysis
 
 
